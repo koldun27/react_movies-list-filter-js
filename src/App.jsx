@@ -8,7 +8,7 @@ export const App = () => {
   const [query, setQuery] = useState('');
   const movies = [...moviesFromServer];
 
-  const filterMovies = function () {
+  const filterMovies = function filterMovies() {
     if (!query) {
       return moviesFromServer;
     }
