@@ -1,26 +1,21 @@
 import { useState } from 'react';
-
 import './App.scss';
 import { MoviesList } from './components/MoviesList';
 import moviesFromServer from './api/movies.json';
 
 export const App = () => {
   const [query, setQuery] = useState('');
-  const movies = [...moviesFromServer];
+  let movies = [...moviesFromServer];
 
-  const filterMovies = function filterMovies() {
-    if (!query) {
-      return moviesFromServer;
-    }
+  if (query) {
+    movies = movies.filter(movie => {
+      const title = movie.title.toLowerCase().trim();
+      const description = movie.description.toLowerCase().trim();
+      const movieQuery = query.toLowerCase().trim();
 
-    const searchTerm = query.toLowerCase().trim();
-
-    return movies.filter(
-      movie =>
-        movie.title.toLowerCase().trim().includes(searchTerm) ||
-        movie.description.toLowerCase().trim().includes(searchTerm),
-    );
-  };
+      return title.includes(movieQuery) || description.includes(movieQuery);
+    });
+  }
 
   return (
     <div className="page">
@@ -34,19 +29,17 @@ export const App = () => {
 
             <div className="control">
               <input
-                onChange={e => {
-                  setQuery(e.target.value);
-                }}
                 type="text"
                 id="search-query"
                 className="input"
                 placeholder="Type search word"
+                onChange={event => setQuery(event.target.value)}
               />
             </div>
           </div>
         </div>
 
-        <MoviesList movies={filterMovies()} />
+        <MoviesList movies={movies} />
       </div>
 
       <div className="sidebar">Sidebar goes here</div>
